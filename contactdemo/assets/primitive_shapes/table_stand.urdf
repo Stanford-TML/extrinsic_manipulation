@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<robot name="table_stand">
+  <link name="table_stand_base_link">
+    <visual>
+      <geometry>
+        <box size="0.2 0.2 0.013"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.2 0.2 0.013"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>

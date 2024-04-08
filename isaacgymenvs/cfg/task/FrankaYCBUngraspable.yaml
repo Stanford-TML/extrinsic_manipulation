@@ -1,0 +1,126 @@
+# used to create the object
+name: FrankaYCBUngraspable
+
+physics_engine: ${..physics_engine}
+
+# if given, will override the device setting in gym. 
+env:
+  numEnvs: ${resolve_default:8192,${...num_envs}}
+  envSpacing: 1.5
+  episodeLength: 150
+  enableDebugVis: False
+
+  clipObservations: 5.0
+  clipActions: 1.0
+  
+  # object initialization 
+  # Table is 0.6x1.0
+  objectPoseNoises:
+    startRelPositionMin: [-0.3, -0.05, 0.] # Relative to target position
+    startRelPositionMax: [-0., 0.05, 0.] # Relative to target position
+    startRotationNoise: 0.
+    targetPositionNoise: [0.02, 0.25, 0.]
+    targetRotationNoise: 0.1
+  frankaPositionNoise: 0.01
+  frankaRotationNoise: 0.0
+  frankaDofNoise: 0. #0.3
+
+  aggregateMode: 3
+
+  actionScale: 1.
+
+  distRewardScale: 0.1 # hand to object distance
+  liftRewardScale: 0. # Whether the object was lifted
+  alignRewardScale: 0.
+  successRewardScale: 100.0
+
+  controlType: joint_imp  # options are {joint_imp, joint_tor, osc}
+
+  asset:
+    assetRoot: "../../assets"
+    assetFileNameFranka: "urdf/franka_description/robots/franka_panda_gripper.urdf"
+  # stateStartEndFile: "../scripts/output/0224_scanned_100k_10cm.pkl"
+
+  # set to True if you use camera sensors in the environment
+  enableCameraSensors: False
+
+  #chosen_objs: ["biscuit",  "cereal",  "chocolate",  "cocoa",  "cracker",  "gelatin",  "meat",  "mustard",  "oat", "ramen", "seasoning", "wafer"]
+  
+  chosen_objs: ["cracker"]
+  # The corners of the wall, expressed w.r.t. robot base. One of 0.7, 0.75, 0.8.
+  wall_left_x: 0.80
+  wall_right_x: 0.80
+
+
+sim:
+  dt: 0.01667 # 1/60
+  substeps: 2
+  up_axis: "z"
+  use_gpu_pipeline: ${eq:${...pipeline},"gpu"}
+  gravity: [0.0, 0.0, -9.81]
+  physx:
+    num_threads: ${....num_threads}
+    solver_type: ${....solver_type}
+    use_gpu: ${contains:"cuda",${....sim_device}} # set to False to run on CPU
+    num_position_iterations: 8
+    num_velocity_iterations: 1
+    contact_offset: 0.005
+    rest_offset: 0.0
+    bounce_threshold_velocity: 0.2
+    max_depenetration_velocity: 1000.0
+    default_buffer_size_multiplier: 5.0
+    max_gpu_contact_pairs: 1048576 # 1024*1024
+    num_subscenes: ${....num_subscenes}
+    contact_collection: 0 # 0: CC_NEVER (don't collect contact info), 1: CC_LAST_SUBSTEP (collect only contacts on last substep), 2: CC_ALL_SUBSTEPS (default - all contacts)
+
+task:
+  use_latent: True
+  save_states: False
+  save_dir:
+  randomize: False # True # set to true to use stock randomization function
+  randomization_params:
+    hw_vec_task_randomize: False
+    observations:
+      schedule: "linear"  # turn on noise after `schedule_steps` num steps
+      schedule_steps: 100000
+      range: [0.0, 0.02] #Gausssian (mean, variance)
+      operation: "additive"
+      distribution: "gaussian"
+      # for hw_vec_task
+      # range_rot: [0.0, 0.1]
+      # range_pos: [0.0, 0.06]
+    actions:
+      range: [0.0, 0.015]
+      distribution: "gaussian"
+      operation: "additive"
+      schedule: "linear"  # turn on noise after `schedule_steps` num steps
+      schedule_steps: 100000
+    actor_params:
+      cubeA:
+        rigid_body_properties:
+          mass:
+            setup_only: True
+            range: [0.5, 1.5]
+            operation: "scaling"       
+            distribution: "uniform"
+        rigid_shape_properties:
+          friction:
+            num_buckets: 500
+            range: [0.2, 1.5]
+            operation: "scaling"
+            distribution: "uniform"
+            schedule: "linear"  # "linear" will scale the current random sample by `min(current num steps, schedule_steps) / schedule_steps`
+            schedule_steps: 100000
+          restitution:
+            range: [0., 0.7]
+            operation: "scaling"
+            distribution: "uniform"
+            schedule: "linear"  # "linear" will scale the current random sample by `min(current num steps, schedule_steps) / schedule_steps`
+            schedule_steps: 100000
+        scale:
+          range: [0.9, 1.1]
+          operation: "scaling"
+          distribution: "uniform"
+          schedule: "linear"  # "linear" will scale the current random sample by ``min(current num steps, schedule_steps) / schedule_steps`
+          schedule_steps: 100000
+  drake_scene_cfg_path: "/home/tml-franka-beast/exp/contact_demo/contactdemo/configs/franka_table_scene.yaml"

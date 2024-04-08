@@ -1,0 +1,49 @@
+franka:
+  franka_pos: [-0.45, 0.0, 1.038] # 1.0 + table_thickness / 2 + table_stand_height
+
+table:
+  table_pos: [0.0, 0.0, 1.0]
+  table_dims: [1., 1.2, 0.05] # Table is made artificially large to accomodate the wall position changes
+  # No asset needed as it is just a box
+
+table_stand:
+  table_stand_dim: [0.2, 0.2, 0.013]
+  table_stand_pos: [-0.5, 0.0, 1.0315] # 1 + table_dims[2] / 2 + table_stand_dim[2] / 2,
+  # No asset needed as it is just a box
+
+wall:
+  wall_dim: [0.045, 1.015, 0.1] # The 0.045 thickness is fake, but the 1.015 length reflects the hardware
+  # x is table_dims[0] / 2 + wall_size[0] / 2.0,
+  # z is 0.5 * wall_size[2] + 1.0 + table_dims[2] / 2,
+  wall_pos: [0.4225, 0., 1.075] # Up to 0.85 from robot bas + 0.0225 for the wall thickness
+  # No asset needed as it is just a box
+  wall_rpy: [0., 0., 0.]
+
+obstacles:
+  # push_push_obstacle:
+  #   file: "primitive_shapes/obs1.urdf"
+  #   pos: [-0.071, -0.304, 1.045] # z is 0.5 * obstacle_size[2] + 1.0065
+  #   quat: [1., 0., 0., 0.] # In drake format, i.e. qw-qx-qy-qz-x-y-z
+  #   base_link_name: "obstacle1_base_link"
+
+#   push_pivot_pull_obstacle:
+#     file: "primitive_shapes/obs2.urdf"
+#     pos: [0.1075, 0.3175, 1.0695] # z is 0.5 * obstacle_size[2] + 1.0065
+#     quat: [1., 0., 0., 0.] # In drake format, i.e. qw-qx-qy-qz-x-y-z
+#     base_link_name: "obstacle2_base_link"
+  
+  # Uncomment the following for pull-pivot-push-grasp
+  push_pivot_pull_obstacle_1:
+    file: "primitive_shapes/obs2.urdf"
+    pos: [-0.1895,-0.385, 1.0695] # z is 0.5 * obstacle_size[2] + 1.0065
+    quat: [1., 0., 0., 0.] # In drake format, i.e. qw-qx-qy-qz-x-y-z
+    base_link_name: "obstacle2_base_link"
+ 
+ 
+  push_pivot_pull_obstacle_2:
+    file: "primitive_shapes/obs3.urdf"
+    pos: [0.238, -0.2775, 1.088] # z is 0.5 * obstacle_size[2] + 1.0065
+    quat: [1., 0., 0., 0.] # In drake format, i.e. qw-qx-qy-qz-x-y-z
+    base_link_name: "obstacle3_base_link"
+
+visualize: True

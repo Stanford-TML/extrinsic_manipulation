@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot name="table">
+  <link name="table_base_link">
+    <visual>
+      <geometry>
+        <box size="1. 1.2 0.05"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="1. 1.2 0.05"/>
+      </geometry>
+    </collision>
+  </link>
+  <frame link="table_base_link" name="tabletop_frame" rpy="0. 0. 0." xyz="0.0 0 0.025"/>
+</robot>

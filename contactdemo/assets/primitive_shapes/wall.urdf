@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot name="wall">
+  <link name="wall_base_link">
+    <visual>
+      <geometry>
+        <box size="0.045 1.015 0.1"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.045 1.015 0.1"/>
+      </geometry>
+    </collision>
+  </link>
+<frame link="wall_base_link" name="wall_bottom_edge_frame" rpy="0. 0. 0." xyz="-0.0225 0 -0.05"/>
+</robot>
